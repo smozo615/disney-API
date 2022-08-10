@@ -7,6 +7,4 @@ app.get('/', (req, res) => {
   res.send('<h1>Welcome to Disney API</h1>')
 });
 
-app.listen(port, ()=>{
-  console.log(`The API is running on port: ${port}`);
-})
+app.listen(port)
