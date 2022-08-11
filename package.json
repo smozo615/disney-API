@@ -27,7 +27,8 @@
     "sequelize": "6.21.3",
     "sequelize-cli": "6.4.1",
     "swagger-jsdoc": "6.2.5",
-    "swagger-ui-express": "4.5.0"
+    "swagger-ui-express": "4.5.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "8.21.0",
