@@ -6,6 +6,7 @@ const id = Joi.string().guid({
 const email = Joi.string().email();
 const password = Joi.string().min(8);
 
+// Schemas
 const createUserSchema = Joi.object({
   email: email.required(),
   password: password.required(),

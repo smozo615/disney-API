@@ -17,7 +17,7 @@
 const express = require('express');
 
 // middleware: validator and schemas
-const { reqDataValidator } = require('../middlewares/validator.middleware');
+const { dataValidator } = require('../middlewares/validator.middleware');
 const {
   createUserSchema,
   updateUserSchema,
@@ -49,15 +49,11 @@ const router = express.Router();
  *            schema:
  *              $ref: '#/components/schemas/User'
  *      '400':
- *        description: There is something wrong with the req
- *        content:
- *          application/json:
- *            schema:
- *              type: object
+ *        description: There is something wrong with the req body
  */
 router.post(
   '/',
-  reqDataValidator(createUserSchema, 'body'),
+  dataValidator(createUserSchema, 'body'),
   async (req, res, next) => {
     try {
       const { body } = req;
@@ -115,10 +111,6 @@ router.get('/', async (req, res, next) => {
  *                {id: string}
  *      '400':
  *        description: There is something wrong with the req
- *        content:
- *          application/json:
- *            schema:
- *              type: object
  *    parameters:
  *      - name: id
  *        in: path
@@ -129,7 +121,7 @@ router.get('/', async (req, res, next) => {
  */
 router.get(
   '/:id',
-  reqDataValidator(getUserSchema, 'params'),
+  dataValidator(getUserSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -180,8 +172,8 @@ router.get(
  */
 router.patch(
   '/:id',
-  reqDataValidator(getUserSchema, 'params'),
-  reqDataValidator(updateUserSchema, 'body'),
+  dataValidator(getUserSchema, 'params'),
+  dataValidator(updateUserSchema, 'body'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -227,7 +219,7 @@ router.patch(
  */
 router.delete(
   '/:id',
-  reqDataValidator(getUserSchema, 'params'),
+  dataValidator(getUserSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;

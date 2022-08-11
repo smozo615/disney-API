@@ -1,6 +1,6 @@
 const boom = require('@hapi/boom');
 
-function reqDataValidator(schema, property) {
+function dataValidator(schema, property) {
   return (req, res, next) => {
     const data = req[property];
     const { error } = schema.validate(data, { abortEarly: false });
@@ -11,4 +11,4 @@ function reqDataValidator(schema, property) {
   };
 }
 
-module.exports = { reqDataValidator };
+module.exports = { dataValidator };

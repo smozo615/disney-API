@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 // to enable json
 app.use(express.json());
 
-// Swagger
+// Swagger - doc
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerConfig = {
