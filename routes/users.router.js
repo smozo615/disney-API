@@ -16,6 +16,14 @@
  */
 const express = require('express');
 
+// middleware: validator and schemas
+const { reqDataValidator } = require('../middlewares/validator.middleware');
+const {
+  createUserSchema,
+  updateUserSchema,
+  getUserSchema,
+} = require('./../schemas/user.schema');
+
 // Router
 const router = express.Router();
 
@@ -40,16 +48,26 @@ const router = express.Router();
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/User'
+ *      '400':
+ *        description: There is something wrong with the req
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  */
-router.post('/', async (req, res, next) => {
-  try {
-    const { body } = req;
-    const newUser = body;
-    res.status(201).json(newUser);
-  } catch (err) {
-    next(err);
+router.post(
+  '/',
+  reqDataValidator(createUserSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const { body } = req;
+      const newUser = body;
+      res.status(201).json(newUser);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 // Get all users
 /**
@@ -95,6 +113,12 @@ router.get('/', async (req, res, next) => {
  *              type: object
  *              example:
  *                {id: string}
+ *      '400':
+ *        description: There is something wrong with the req
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    parameters:
  *      - name: id
  *        in: path
@@ -103,15 +127,19 @@ router.get('/', async (req, res, next) => {
  *        schema:
  *          type: string
  */
-router.get('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const user = { id };
-    res.json(user);
-  } catch (err) {
-    next(err);
+router.get(
+  '/:id',
+  reqDataValidator(getUserSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const user = { id };
+      res.json(user);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 // Update user
 /**
@@ -129,6 +157,19 @@ router.get('/:id', async (req, res, next) => {
  *            type: object
  *            example:
  *              {email: string, password: string}
+ *    responses:
+ *      '200':
+ *        description: User data
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/User'
+ *      '400':
+ *        description: There is something wrong with the req
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    parameters:
  *      - name: id
  *        in: path
@@ -137,16 +178,21 @@ router.get('/:id', async (req, res, next) => {
  *        schema:
  *          type: string
  */
-router.patch('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { body } = req;
-    const user = { id: id, body: body };
-    res.json(user);
-  } catch (err) {
-    next(err);
+router.patch(
+  '/:id',
+  reqDataValidator(getUserSchema, 'params'),
+  reqDataValidator(updateUserSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { body } = req;
+      const user = { id: id, body: body };
+      res.json(user);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 // Delete user
 /**
@@ -165,6 +211,12 @@ router.patch('/:id', async (req, res, next) => {
  *              type: object
  *              example:
  *                {id: string, body: object}
+ *      '400':
+ *        description: There is something wrong with the req
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    parameters:
  *      - name: id
  *        in: path
@@ -173,14 +225,18 @@ router.patch('/:id', async (req, res, next) => {
  *        schema:
  *          type: string
  */
-router.delete('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const user = { id };
-    res.json(user);
-  } catch (err) {
-    next(err);
+router.delete(
+  '/:id',
+  reqDataValidator(getUserSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const user = { id };
+      res.json(user);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 module.exports = router;
