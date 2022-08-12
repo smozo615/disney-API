@@ -2,84 +2,76 @@
  * @swagger
  * components:
  *  schemas:
- *    Movie:
+ *    Category:
  *      type: object
  *      properties:
  *        image:
  *          type: string
- *        title:
+ *        name:
  *          type: string
- *        releaseDate:
- *          type: string
- *        stars:
- *          type: integer
- *          minimun: 1
- *          maximun: 5
  *      required:
  *        - image
- *        - title
- *        - stars
- *        - releaseDate
+ *        - name
  */
 const express = require('express');
 
 // middleware: validator and schemas
 const { dataValidator } = require('../middlewares/validator.middleware');
 const {
-  createMovieSchema,
-  getMovieSchema,
-  updateMovieSchema,
-} = require('../schemas/movie.schema');
+  createCategorySchema,
+  getCategorySchema,
+  updateCategorySchema,
+} = require('../schemas/category.schema');
 
 // Router
 const router = express.Router();
 
-// Create movie
+// Create category
 /**
  * @swagger
- * /api/v1/movies:
+ * /api/v1/categories:
  *  post:
- *    summary: Create new movie
- *    description: Return movie created
- *    tags: [Movie]
+ *    summary: Create new category
+ *    description: Return category created
+ *    tags: [Category]
  *    requestBody:
  *      required: true
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Movie'
+ *            $ref: '#/components/schemas/Category'
  *    responses:
  *      '201':
- *        description: New movie created
+ *        description: New category created
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Movie'
+ *              $ref: '#/components/schemas/Category'
  *      '400':
  *        description: There is something wrong with the req body
  */
 router.post(
   '/',
-  dataValidator(createMovieSchema, 'body'),
+  dataValidator(createCategorySchema, 'body'),
   async (req, res, next) => {
     try {
       const { body } = req;
-      const newMovie = body;
-      res.status(201).json(newMovie);
+      const newCategory = body;
+      res.status(201).json(newCategory);
     } catch (err) {
       next(err);
     }
   }
 );
 
-// Get all movie
+// Get all category
 /**
  * @swagger
- * /api/v1/movies:
+ * /api/v1/categories:
  *  get:
- *    summary: Returns all movie
- *    description: Return an Array with all movie in db
- *    tags: [Movie]
+ *    summary: Returns all category
+ *    description: Return an Array with all category in db
+ *    tags: [Category]
  *    responses:
  *      '200':
  *        description: Everything works perfect
@@ -88,51 +80,47 @@ router.post(
  *            schema:
  *              type: array
  *              items:
- *                $ref: '#/components/schemas/Movie'
+ *                $ref: '#/components/schemas/Category'
  */
 router.get('/', async (req, res, next) => {
   try {
-    const movies = [
+    const categories = [
       {
         image: 'www.imageUrl.com',
-        title: 'Aladin y el genio',
-        releaseDate: '16',
-        stars: 70,
+        name: 'action',
       },
       {
         image: 'www.imageUrl.com',
-        title: 'Aladin y el genio',
-        releaseDate: '16',
-        stars: 70,
+        name: 'action',
       },
     ];
-    res.send(movies);
+    res.send(categories);
   } catch (err) {
     next(err);
   }
 });
 
-// Get movie by ID
+// Get category by ID
 /**
  * @swagger
- * /api/v1/movies/{id}:
+ * /api/v1/categories/{id}:
  *  get:
- *    summary: Find movie by ID
- *    description: Returns movie based on ID
- *    tags: [Movie]
+ *    summary: Find category by ID
+ *    description: Returns category based on ID
+ *    tags: [Category]
  *    responses:
  *      '200':
- *        description: Return movie
+ *        description: Return category
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Movie'
+ *              $ref: '#/components/schemas/Category'
  *      '400':
  *        description: Something in the req is wrong
  *    parameters:
  *      - name: id
  *        in: path
- *        description: ID of movie to find
+ *        description: ID of Category to find
  *        required: true
  *        schema:
  *          type: string
@@ -140,98 +128,98 @@ router.get('/', async (req, res, next) => {
  */
 router.get(
   '/:id',
-  dataValidator(getMovieSchema, 'params'),
+  dataValidator(getCategorySchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const movie = { id };
-      res.json(movie);
+      const category = { id };
+      res.json(category);
     } catch (err) {
       next(err);
     }
   }
 );
 
-// Update movie
+// Update category
 /**
  * @swagger
- * /api/v1/movies/{id}:
+ * /api/v1/categories/{id}:
  *  patch:
- *    tags: [Movie]
- *    summary: Update movie
- *    description: return movie with changes made
+ *    tags: [Category]
+ *    summary: Update category
+ *    description: return category with changes made
  *    requestBody:
  *      required: true
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Movie'
+ *            $ref: '#/components/schemas/Category'
  *    parameters:
  *      - name: id
  *        in: path
- *        description: ID of movie to update
+ *        description: ID of category to update
  *        required: true
  *        schema:
  *          type: string
  *    responses:
  *      '200':
- *        description: successfully updated movie
+ *        description: successfully updated category
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Movie'
+ *              $ref: '#/components/schemas/Category'
  *      '400':
  *        description: bad request
  */
 router.patch(
   '/:id',
-  dataValidator(getMovieSchema, 'params'),
-  dataValidator(updateMovieSchema, 'body'),
+  dataValidator(getCategorySchema, 'params'),
+  dataValidator(updateCategorySchema, 'body'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
       const { body } = req;
-      const movie = { id: id, body: body };
-      res.json(movie);
+      const category = { id: id, body: body };
+      res.json(category);
     } catch (err) {
       next(err);
     }
   }
 );
 
-// delete movie
+// Delete category
 /**
  * @swagger
- * /api/v1/movies/{id}:
+ * /api/v1/categories/{id}:
  *  delete:
- *    tags: [Movie]
- *    summary: delete movie
- *    description: return movie deleted
+ *    tags: [Category]
+ *    summary: Delete category
+ *    description: return category deleted
  *    parameters:
  *      - name: id
  *        in: path
- *        description: ID of movie to delete
+ *        description: ID of category to delete
  *        required: true
  *        schema:
  *          type: string
  *    responses:
  *      '200':
- *        description: successfully deleted movie
+ *        description: successfully deleted category
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Movie'
+ *              $ref: '#/components/schemas/Category'
  *      '400':
  *        description: bad request
  */
 router.delete(
   '/:id',
-  // dataValidator(getCharacterSchema, 'params'),
+  dataValidator(getCategorySchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const movie = { id };
-      res.json(movie);
+      const category = { id };
+      res.json(category);
     } catch (err) {
       next(err);
     }
