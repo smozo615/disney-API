@@ -5,6 +5,8 @@
  *    Character:
  *      type: object
  *      properties:
+ *        id:
+ *          type: string
  *        image:
  *          type: string
  *        name:
@@ -32,6 +34,10 @@ const {
 
 // Router
 const router = express.Router();
+
+// Service
+const { CharactersService } = require('../services/character.service');
+const service = new CharactersService();
 
 // Create character
 /**
@@ -63,7 +69,7 @@ router.post(
   async (req, res, next) => {
     try {
       const { body } = req;
-      const newCharacter = body;
+      const newCharacter = await service.createCharacter(body);
       res.status(201).json(newCharacter);
     } catch (err) {
       next(err);
@@ -91,22 +97,7 @@ router.post(
  */
 router.get('/', async (req, res, next) => {
   try {
-    const characters = [
-      {
-        image: 'www.imageUrl.com',
-        name: 'Aladin',
-        age: 16,
-        weight: 70,
-        story: 'From 0 to 100',
-      },
-      {
-        image: 'www.imageUrl.com',
-        name: 'Aladin',
-        age: 16,
-        weight: 70,
-        story: 'From 0 to 100',
-      },
-    ];
+    const characters = await service.getAllCharacters();
     res.send(characters);
   } catch (err) {
     next(err);
@@ -145,7 +136,7 @@ router.get(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const character = { id };
+      const character = await service.findCharacterById(id);
       res.json(character);
     } catch (err) {
       next(err);
@@ -192,7 +183,7 @@ router.patch(
     try {
       const { id } = req.params;
       const { body } = req;
-      const character = { id: id, body: body };
+      const character = await service.updateCharacter(id, body);
       res.json(character);
     } catch (err) {
       next(err);
@@ -231,7 +222,7 @@ router.delete(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const character = { id };
+      const character = await service.deleteCharacter(id);
       res.json(character);
     } catch (err) {
       next(err);

@@ -24,6 +24,7 @@
   "homepage": "https://github.com/smozo615/disney-API#readme",
   "dependencies": {
     "@hapi/boom": "10.0.0",
+    "bcryptjs": "2.4.3",
     "express": "4.18.1",
     "joi": "17.6.0",
     "sequelize": "6.21.3",

@@ -5,6 +5,8 @@
  *    Movie:
  *      type: object
  *      properties:
+ *        id:
+ *          type: string
  *        image:
  *          type: string
  *        title:
@@ -33,6 +35,10 @@ const {
 
 // Router
 const router = express.Router();
+
+// Service
+const { MoviesService } = require('../services/movie.service');
+const service = new MoviesService();
 
 // Create movie
 /**
@@ -64,7 +70,7 @@ router.post(
   async (req, res, next) => {
     try {
       const { body } = req;
-      const newMovie = body;
+      const newMovie = await service.createMovie(body);
       res.status(201).json(newMovie);
     } catch (err) {
       next(err);
@@ -92,20 +98,7 @@ router.post(
  */
 router.get('/', async (req, res, next) => {
   try {
-    const movies = [
-      {
-        image: 'www.imageUrl.com',
-        title: 'Aladin y el genio',
-        releaseDate: '16',
-        stars: 70,
-      },
-      {
-        image: 'www.imageUrl.com',
-        title: 'Aladin y el genio',
-        releaseDate: '16',
-        stars: 70,
-      },
-    ];
+    const movies = await service.getAllMovies();
     res.send(movies);
   } catch (err) {
     next(err);
@@ -144,7 +137,7 @@ router.get(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const movie = { id };
+      const movie = await service.findMovieById(id);
       res.json(movie);
     } catch (err) {
       next(err);
@@ -191,7 +184,7 @@ router.patch(
     try {
       const { id } = req.params;
       const { body } = req;
-      const movie = { id: id, body: body };
+      const movie = await service.updateMovie(id, body);
       res.json(movie);
     } catch (err) {
       next(err);
@@ -230,7 +223,7 @@ router.delete(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const movie = { id };
+      const movie = await service.deleteMovie(id);
       res.json(movie);
     } catch (err) {
       next(err);

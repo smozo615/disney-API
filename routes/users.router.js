@@ -5,6 +5,8 @@
  *    User:
  *      type: object
  *      properties:
+ *        id:
+ *          type: string
  *        email:
  *          type: string
  *        password:
@@ -26,6 +28,10 @@ const {
 
 // Router
 const router = express.Router();
+
+// Service
+const { UsersService } = require('../services/user.service');
+const service = new UsersService();
 
 // Create user
 /**
@@ -57,7 +63,8 @@ router.post(
   async (req, res, next) => {
     try {
       const { body } = req;
-      const newUser = body;
+      const newUser = await service.createUser(body);
+      console.log(newUser);
       res.status(201).json(newUser);
     } catch (err) {
       next(err);
@@ -85,7 +92,7 @@ router.post(
  */
 router.get('/', async (req, res, next) => {
   try {
-    const users = { email: 'admin@disney.com', password: 'admin' };
+    const users = await service.getAllUser();
     res.send(users);
   } catch (err) {
     next(err);
@@ -125,7 +132,7 @@ router.get(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const user = { id };
+      const user = await service.findUserById(id);
       res.json(user);
     } catch (err) {
       next(err);
@@ -178,7 +185,7 @@ router.patch(
     try {
       const { id } = req.params;
       const { body } = req;
-      const user = { id: id, body: body };
+      const user = await service.updateUser(id, body);
       res.json(user);
     } catch (err) {
       next(err);
@@ -223,7 +230,7 @@ router.delete(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const user = { id };
+      const user = await service.deleteUser(id);
       res.json(user);
     } catch (err) {
       next(err);

@@ -5,6 +5,8 @@
  *    Category:
  *      type: object
  *      properties:
+ *        id:
+ *          type: string
  *        image:
  *          type: string
  *        name:
@@ -25,6 +27,10 @@ const {
 
 // Router
 const router = express.Router();
+
+// Service
+const { CategoriesService } = require('../services/category.service');
+const service = new CategoriesService();
 
 // Create category
 /**
@@ -56,7 +62,7 @@ router.post(
   async (req, res, next) => {
     try {
       const { body } = req;
-      const newCategory = body;
+      const newCategory = await service.createCategory(body);
       res.status(201).json(newCategory);
     } catch (err) {
       next(err);
@@ -84,16 +90,7 @@ router.post(
  */
 router.get('/', async (req, res, next) => {
   try {
-    const categories = [
-      {
-        image: 'www.imageUrl.com',
-        name: 'action',
-      },
-      {
-        image: 'www.imageUrl.com',
-        name: 'action',
-      },
-    ];
+    const categories = await service.getAllCategories();
     res.send(categories);
   } catch (err) {
     next(err);
@@ -132,7 +129,7 @@ router.get(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const category = { id };
+      const category = await service.findCategoryById(id);
       res.json(category);
     } catch (err) {
       next(err);
@@ -179,7 +176,7 @@ router.patch(
     try {
       const { id } = req.params;
       const { body } = req;
-      const category = { id: id, body: body };
+      const category = await service.updateCategory(id, body);
       res.json(category);
     } catch (err) {
       next(err);
@@ -218,7 +215,7 @@ router.delete(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const category = { id };
+      const category = await service.deleteCategory(id);
       res.json(category);
     } catch (err) {
       next(err);
