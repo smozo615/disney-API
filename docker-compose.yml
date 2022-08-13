@@ -1,14 +1,45 @@
 version: '3.8'
 
 services:
+
   app:
     build:
       context: ./
+      dockerfile: Dockerfile
       target: dev
+    env_file: .env
     volumes:
       - .:/src
-    command: npm run start:dev
     ports:
       - "3000:3000"
     environment:
-      NODE_ENV: development
+      - NODE_ENV
+      - DATABASE_URL
+    depends_on:
+      - postgres
+    command: sh -c './wait-for postgres:5432 -- npm run start:dev'
+
+  postgres:
+    image: postgres:14
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL
+      - PGADMIN_DEFAULT_PASSWORD
+    ports:
+      - 80:80
+    depends_on:
+      - postgres

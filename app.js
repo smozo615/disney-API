@@ -7,7 +7,7 @@ const {
 } = require('./middlewares/error.middleware');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 // to enable json
 app.use(express.json());
@@ -29,7 +29,7 @@ const swaggerConfig = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: `http://localhost:${process.env.PORT}`,
         description: 'Development Server',
       },
     ],
