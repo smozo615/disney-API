@@ -5,8 +5,6 @@
  *    User:
  *      type: object
  *      properties:
- *        id:
- *          type: string
  *        email:
  *          type: string
  *        password:

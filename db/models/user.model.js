@@ -31,6 +31,7 @@ class User extends Model {
       sequelize,
       tableName: USER_TABLE_NAME,
       modelName: 'User',
+      timestamps: false, // Personal Decision
     };
   }
 }
