@@ -5,7 +5,17 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "start:dev": "nodemon app.js"
+    "start:dev": "nodemon app.js",
+    "migrations:generate": "sequelize-cli migration:generate --name",
+    "migrations:run": "sequelize-cli db:migrate",
+    "migrations:status": "sequelize-cli db:migrate:status",
+    "migrations:revert": "sequelize-cli db:migrate:undo",
+    "migrations:delete": "sequelize-cli db:migrate:undo:all",
+    "seeds:generate": "sequelize-cli seed:generate --name",
+    "seeds:run": "sequelize-cli db:seed",
+    "seeds:revert": "sequelize-cli db:seed:undo",
+    "seeds:runAll": "sequelize-cli db:seed:all",
+    "seeds:delete": "sequelize-cli db:seed:undo:all"
   },
   "repository": {
     "type": "git",
@@ -27,6 +37,8 @@
     "bcryptjs": "2.4.3",
     "express": "4.18.1",
     "joi": "17.6.0",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
     "sequelize": "6.21.3",
     "sequelize-cli": "6.4.1",
     "swagger-jsdoc": "6.2.5",
