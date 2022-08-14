@@ -7,7 +7,7 @@ const id = Joi.string().guid({
 const title = Joi.string();
 const image = Joi.string();
 const releaseDate = Joi.date();
-const stars = Joi.number().integer().min(1).max(5);
+const stars = Joi.number().min(1).max(5);
 
 // Schemas
 const createMovieSchema = Joi.object({

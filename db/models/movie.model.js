@@ -1,10 +1,10 @@
 const { Model, DataTypes } = require('sequelize');
 
 // Table Name
-const USER_TABLE_NAME = 'users';
+const MOVIE_TABLE_NAME = 'movies';
 
-// Table schema
-const UserSchema = {
+// Table Schema
+const MovieSchema = {
   id: {
     allowNull: false,
     primaryKey: true,
@@ -12,29 +12,37 @@ const UserSchema = {
     defaultValue: DataTypes.UUIDV4,
     unique: true,
   },
-  email: {
+  image: {
     allowNull: false,
     type: DataTypes.STRING,
-    unique: true,
   },
-  password: {
+  title: {
     allowNull: false,
     type: DataTypes.STRING,
+  },
+  releaseDate: {
+    type: DataTypes.DATE,
+    field: 'release_date',
+    allowNull: false,
+  },
+  stars: {
+    allowNull: false,
+    type: DataTypes.FLOAT,
   },
 };
 
 // Extending Model
-class User extends Model {
+class Movie extends Model {
   static associate() {}
 
   static config(sequelize) {
     return {
       sequelize,
-      tableName: USER_TABLE_NAME,
-      modelName: 'User',
+      tableName: MOVIE_TABLE_NAME,
+      modelName: 'Movie',
       timestamps: false, // Personal Decision
     };
   }
 }
 
-module.exports = { USER_TABLE_NAME, UserSchema, User };
+module.exports = { MOVIE_TABLE_NAME, MovieSchema, Movie };

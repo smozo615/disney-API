@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 
-const setupModels = require('../db/models');
+const setupModels = require('./models');
 
 const options = {
   dialect: 'postgres',

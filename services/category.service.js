@@ -1,23 +1,21 @@
-const { v4: uuidv4 } = require('uuid');
 const boom = require('@hapi/boom');
+
+// Models
+const { models } = require('../db/sequelize');
 
 class CategoriesService {
   async createCategory(data) {
-    const newData = {
-      id: uuidv4(),
-      ...data,
-    };
-    const newCategory = newData;
+    const newCategory = await models.Category.create(data);
     return newCategory;
   }
 
   async getAllCategories() {
-    const categories = db;
+    const categories = await models.Category.findAll();
     return categories;
   }
 
   async findCategoryById(id) {
-    const category = db.find((category) => category.id === id);
+    const category = await models.Category.findByPk(id);
     if (!category) {
       throw boom.notFound('Category not found');
     }
@@ -26,20 +24,15 @@ class CategoriesService {
 
   async updateCategory(id, changes) {
     const category = await this.findCategoryById(id);
-    const updatedCategory = { ...category, ...changes };
+    const updatedCategory = await category.update(changes);
     return updatedCategory;
   }
 
   async deleteCategory(id) {
     const category = await this.findCategoryById(id);
+    await category.destroy();
     return category;
   }
 }
-
-const db = [
-  { id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb5d' },
-  { id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d' },
-  { id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb7d' },
-];
 
 module.exports = { CategoriesService };

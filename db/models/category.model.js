@@ -1,10 +1,10 @@
 const { Model, DataTypes } = require('sequelize');
 
 // Table Name
-const USER_TABLE_NAME = 'users';
+const CATEGORY_TABLE_NAME = 'categories';
 
-// Table schema
-const UserSchema = {
+// Table Schema
+const CategorySchema = {
   id: {
     allowNull: false,
     primaryKey: true,
@@ -12,29 +12,29 @@ const UserSchema = {
     defaultValue: DataTypes.UUIDV4,
     unique: true,
   },
-  email: {
+  image: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
+  name: {
     allowNull: false,
     type: DataTypes.STRING,
     unique: true,
   },
-  password: {
-    allowNull: false,
-    type: DataTypes.STRING,
-  },
 };
 
 // Extending Model
-class User extends Model {
+class Category extends Model {
   static associate() {}
 
   static config(sequelize) {
     return {
       sequelize,
-      tableName: USER_TABLE_NAME,
-      modelName: 'User',
+      tableName: CATEGORY_TABLE_NAME,
+      modelName: 'Category',
       timestamps: false, // Personal Decision
     };
   }
 }
 
-module.exports = { USER_TABLE_NAME, UserSchema, User };
+module.exports = { Category, CategorySchema, CATEGORY_TABLE_NAME };

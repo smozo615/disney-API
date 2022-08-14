@@ -1,10 +1,10 @@
 const { Model, DataTypes } = require('sequelize');
 
 // Table Name
-const USER_TABLE_NAME = 'users';
+const CHARACTER_TABLE_NAME = 'characters';
 
-// Table schema
-const UserSchema = {
+// Table Schema
+const CharacterSchema = {
   id: {
     allowNull: false,
     primaryKey: true,
@@ -12,29 +12,40 @@ const UserSchema = {
     defaultValue: DataTypes.UUIDV4,
     unique: true,
   },
-  email: {
+  image: {
     allowNull: false,
     type: DataTypes.STRING,
-    unique: true,
   },
-  password: {
+  name: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
+  age: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+  },
+  weight: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+  },
+  story: {
     allowNull: false,
     type: DataTypes.STRING,
   },
 };
 
 // Extending Model
-class User extends Model {
+class Character extends Model {
   static associate() {}
 
   static config(sequelize) {
     return {
       sequelize,
-      tableName: USER_TABLE_NAME,
-      modelName: 'User',
+      tableName: CHARACTER_TABLE_NAME,
+      modelName: 'Character',
       timestamps: false, // Personal Decision
     };
   }
 }
 
-module.exports = { USER_TABLE_NAME, UserSchema, User };
+module.exports = { CHARACTER_TABLE_NAME, CharacterSchema, Character };
