@@ -12,9 +12,9 @@
     "migrations:revert": "sequelize-cli db:migrate:undo",
     "migrations:delete": "sequelize-cli db:migrate:undo:all",
     "seeds:generate": "sequelize-cli seed:generate --name",
-    "seeds:run": "sequelize-cli db:seed",
+    "seeds:runOne": "sequelize-cli db:seed",
     "seeds:revert": "sequelize-cli db:seed:undo",
-    "seeds:runAll": "sequelize-cli db:seed:all",
+    "seeds:run": "sequelize-cli db:seed:all",
     "seeds:delete": "sequelize-cli db:seed:undo:all"
   },
   "repository": {
