@@ -1,5 +1,8 @@
 const { Model, DataTypes } = require('sequelize');
 
+// FOREIGN KEY TABLE
+const { CATEGORY_TABLE_NAME } = require('./category.model');
+
 // Table Name
 const MOVIE_TABLE_NAME = 'movies';
 
@@ -19,6 +22,7 @@ const MovieSchema = {
   title: {
     allowNull: false,
     type: DataTypes.STRING,
+    unique: true,
   },
   releaseDate: {
     type: DataTypes.DATE,
@@ -29,11 +33,24 @@ const MovieSchema = {
     allowNull: false,
     type: DataTypes.FLOAT,
   },
+  categoryId: {
+    field: 'category_id',
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    references: {
+      model: CATEGORY_TABLE_NAME,
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+  },
 };
 
 // Extending Model
 class Movie extends Model {
-  static associate() {}
+  static associate(models) {
+    this.belongsTo(models.Category, { as: 'category' });
+  }
 
   static config(sequelize) {
     return {

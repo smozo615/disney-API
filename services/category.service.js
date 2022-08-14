@@ -10,12 +10,20 @@ class CategoriesService {
   }
 
   async getAllCategories() {
-    const categories = await models.Category.findAll();
+    const categories = await models.Category.findAll({
+      attributes: { exclude: ['id'] },
+    });
     return categories;
   }
 
   async findCategoryById(id) {
-    const category = await models.Category.findByPk(id);
+    const category = await models.Category.findByPk(id, {
+      attributes: { exclude: ['id'] },
+      include: {
+        association: 'movies',
+        attributes: ['image', 'title', 'releaseDate', 'stars'],
+      },
+    });
     if (!category) {
       throw boom.notFound('Category not found');
     }

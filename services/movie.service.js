@@ -5,17 +5,29 @@ const { models } = require('../db/sequelize');
 
 class MoviesService {
   async createMovie(data) {
-    const newMovie = await models.Movie.create(data);
+    const newMovie = await models.Movie.create(data, {
+      include: ['category'],
+    });
     return newMovie;
   }
 
   async getAllMovies() {
-    const movies = await models.Movie.findAll();
+    const movies = await models.Movie.findAll({
+      attributes: ['image', 'title', 'releaseDate'],
+    });
     return movies;
   }
 
   async findMovieById(id) {
-    const movie = await models.Movie.findByPk(id);
+    const movie = await models.Movie.findByPk(id, {
+      attributes: ['image', 'title', 'releaseDate', 'stars'],
+      include: [
+        {
+          association: 'category',
+          attributes: ['image', 'name'],
+        },
+      ],
+    });
     if (!movie) {
       throw boom.notFound('movie not found');
     }

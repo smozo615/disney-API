@@ -15,6 +15,8 @@
  *          type: integer
  *          minimun: 1
  *          maximun: 5
+ *        category:
+ *          $ref: '#components/schemas/Category'
  *      required:
  *        - image
  *        - title

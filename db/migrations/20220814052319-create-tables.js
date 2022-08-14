@@ -59,6 +59,7 @@ module.exports = {
       name: {
         allowNull: false,
         type: Sequelize.DataTypes.STRING,
+        unique: true,
       },
       age: {
         allowNull: false,
@@ -88,6 +89,7 @@ module.exports = {
       title: {
         allowNull: false,
         type: Sequelize.DataTypes.STRING,
+        unique: true,
       },
       releaseDate: {
         type: Sequelize.DataTypes.DATE,
