@@ -31,6 +31,7 @@ const {
   createMovieSchema,
   getMovieSchema,
   updateMovieSchema,
+  addCharacterSchema,
 } = require('../schemas/movie.schema');
 
 // Router
@@ -219,12 +220,57 @@ router.patch(
  */
 router.delete(
   '/:id',
-  // dataValidator(getCharacterSchema, 'params'),
+  dataValidator(getMovieSchema, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
       const movie = await service.deleteMovie(id);
       res.json(movie);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// Add Character to Movie
+/**
+ * @swagger
+ * /api/v1/movies/add-character:
+ *  post:
+ *    tags: [Movie]
+ *    summary: Add character to movie
+ *    description: return message = relation:ok
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              categoryId:
+ *                type: string
+ *              movieId:
+ *                type: string
+ *    responses:
+ *      '200':
+ *        description: successfully added character to movie
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *            example: {relation: ok}
+ *
+ *      '400':
+ *        description: bad request
+ */
+router.post(
+  '/add-character',
+  dataValidator(addCharacterSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const { body } = req;
+      const relation = await service.addCharacter(body);
+      res.json(relation);
     } catch (err) {
       next(err);
     }

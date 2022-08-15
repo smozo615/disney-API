@@ -26,6 +26,13 @@ class MoviesService {
           association: 'category',
           attributes: ['image', 'name'],
         },
+        {
+          association: 'characters',
+          through: {
+            attributes: [],
+          },
+          attributes: { exclude: ['id'] },
+        },
       ],
     });
     if (!movie) {
@@ -47,6 +54,11 @@ class MoviesService {
     const movie = await this.findMovieById(id);
     await movie.destroy();
     return { state: 'deleted' };
+  }
+
+  async addCharacter(data) {
+    await models.CharacterMovie.create(data);
+    return { relation: 'Ok' };
   }
 }
 

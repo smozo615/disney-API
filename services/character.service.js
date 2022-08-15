@@ -10,12 +10,23 @@ class CharactersService {
   }
 
   async getAllCharacters() {
-    const characters = await models.Character.findAll();
+    const characters = await models.Character.findAll({
+      attributes: ['image', 'name'],
+    });
     return characters;
   }
 
   async findCharacterById(id) {
-    const character = await models.Character.findByPk(id);
+    const character = await models.Character.findByPk(id, {
+      include: {
+        association: 'movies',
+        attributes: ['image', 'title'],
+        through: {
+          attributes: [],
+        },
+      },
+      attributes: { exclude: ['id'] },
+    });
     if (!character) {
       throw boom.notFound('Character not found');
     }

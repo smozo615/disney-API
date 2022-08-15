@@ -106,7 +106,7 @@ module.exports = {
   async down(queryInterface) {
     await queryInterface.dropTable(USER_TABLE_NAME);
     await queryInterface.dropTable(CHARACTER_TABLE_NAME);
-    await queryInterface.dropTable(CATEGORY_TABLE_NAME);
     await queryInterface.dropTable(MOVIE_TABLE_NAME);
+    await queryInterface.dropTable(CATEGORY_TABLE_NAME);
   },
 };
