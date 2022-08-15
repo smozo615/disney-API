@@ -11,10 +11,23 @@ class MoviesService {
     return newMovie;
   }
 
-  async getAllMovies() {
-    const movies = await models.Movie.findAll({
+  async getAllMovies({ title, categoryId, order }) {
+    // Query Options
+    const options = {
       attributes: ['image', 'title', 'releaseDate'],
-    });
+      where: {},
+      order: [],
+    };
+    if (title) {
+      options.where.title = title;
+    }
+    if (categoryId) {
+      options.where.categoryId = categoryId;
+    }
+    if (order) {
+      options.order.push(['releaseDate', order]);
+    }
+    const movies = await models.Movie.findAll(options);
     return movies;
   }
 

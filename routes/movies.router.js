@@ -32,6 +32,7 @@ const {
   getMovieSchema,
   updateMovieSchema,
   addCharacterSchema,
+  queryMovieSchema,
 } = require('../schemas/movie.schema');
 
 // Router
@@ -97,14 +98,18 @@ router.post(
  *              items:
  *                $ref: '#/components/schemas/Movie'
  */
-router.get('/', async (req, res, next) => {
-  try {
-    const movies = await service.getAllMovies();
-    res.send(movies);
-  } catch (err) {
-    next(err);
+router.get(
+  '/',
+  dataValidator(queryMovieSchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const movies = await service.getAllMovies(req.query);
+      res.send(movies);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 // Get movie by ID
 /**

@@ -28,6 +28,7 @@ const {
   createCharacterSchema,
   getCharacterSchema,
   updateCharacterSchema,
+  queryCharacterSchema,
 } = require('../schemas/character.schema');
 
 // Router
@@ -93,14 +94,18 @@ router.post(
  *              items:
  *                $ref: '#/components/schemas/Character'
  */
-router.get('/', async (req, res, next) => {
-  try {
-    const characters = await service.getAllCharacters(req.query);
-    res.send(characters);
-  } catch (err) {
-    next(err);
+router.get(
+  '/',
+  dataValidator(queryCharacterSchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const characters = await service.getAllCharacters(req.query);
+      res.send(characters);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 // Get character by ID
 /**

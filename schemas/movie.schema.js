@@ -22,6 +22,9 @@ const movieId = Joi.string().guid({
   version: ['uuidv4', 'uuidv5'],
 });
 
+// Query params
+const order = Joi.any().allow('ASC', 'DESC').only();
+
 // Schemas
 const createMovieSchema = Joi.object({
   title: title.required(),
@@ -49,9 +52,16 @@ const addCharacterSchema = Joi.object({
   movieId: movieId.required(),
 });
 
+const queryMovieSchema = Joi.object({
+  title: title,
+  categoryId: categoryId,
+  order: order,
+});
+
 module.exports = {
   createMovieSchema,
   getMovieSchema,
   updateMovieSchema,
   addCharacterSchema,
+  queryMovieSchema,
 };

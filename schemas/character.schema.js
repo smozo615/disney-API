@@ -10,6 +10,11 @@ const age = Joi.number().integer();
 const weight = Joi.number().min(20).max(120);
 const story = Joi.string().min(10);
 
+// Query Params
+const movieId = Joi.string().guid({
+  version: ['uuidv4', 'uuidv5'],
+});
+
 // Schemas
 const createCharacterSchema = Joi.object({
   name: name.required(),
@@ -31,8 +36,15 @@ const updateCharacterSchema = Joi.object({
   story: story,
 });
 
+const queryCharacterSchema = Joi.object({
+  name: name,
+  age: age,
+  movieId: movieId,
+});
+
 module.exports = {
   createCharacterSchema,
   getCharacterSchema,
   updateCharacterSchema,
+  queryCharacterSchema,
 };
