@@ -4,6 +4,7 @@ const {
   logErrorMiddleware,
   boomErrorMiddleware,
   errorMiddleware,
+  ormErrorMiddleware,
 } = require('./middlewares/error.middleware');
 
 const app = express();
@@ -55,6 +56,7 @@ routerApi(app);
 // Errors middlewares
 app.use(logErrorMiddleware);
 app.use(boomErrorMiddleware);
+app.use(ormErrorMiddleware);
 app.use(errorMiddleware);
 
 app.listen(port);

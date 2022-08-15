@@ -95,7 +95,7 @@ router.post(
  */
 router.get('/', async (req, res, next) => {
   try {
-    const characters = await service.getAllCharacters();
+    const characters = await service.getAllCharacters(req.query);
     res.send(characters);
   } catch (err) {
     next(err);

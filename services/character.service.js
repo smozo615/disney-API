@@ -9,10 +9,29 @@ class CharactersService {
     return newCharacter;
   }
 
-  async getAllCharacters() {
-    const characters = await models.Character.findAll({
+  async getAllCharacters({ name, age, movieId }) {
+    // Query Options
+    const options = {
       attributes: ['image', 'name'],
-    });
+      where: {},
+    };
+    if (name) {
+      options.where.name = name;
+    }
+    if (age) {
+      options.where.age = age;
+    }
+    if (movieId) {
+      options.include = {
+        association: 'movies',
+        attributes: [],
+        through: {
+          attributes: [],
+        },
+        where: { id: movieId },
+      };
+    }
+    const characters = await models.Character.findAll(options);
     return characters;
   }
 
