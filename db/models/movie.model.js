@@ -50,6 +50,12 @@ const MovieSchema = {
 class Movie extends Model {
   static associate(models) {
     this.belongsTo(models.Category, { as: 'category' });
+    this.belongsToMany(models.Character, {
+      through: models.CharacterMovie,
+      as: 'characters',
+      foreignKey: 'movieId',
+      otherKey: 'characterId'
+    });
   }
 
   static config(sequelize) {

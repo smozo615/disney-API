@@ -1,12 +1,6 @@
 const Joi = require('joi');
 
 // Attributes
-const id = Joi.string().guid({
-  version: ['uuidv4', 'uuidv5'],
-});
-const categoryId = Joi.string().guid({
-  version: ['uuidv4', 'uuidv5'],
-});
 const title = Joi.string();
 const image = Joi.string();
 const releaseDate = Joi.date();
@@ -14,6 +8,18 @@ const stars = Joi.number().min(1).max(5);
 const category = Joi.object({
   image: image.required(),
   name: Joi.string().required(),
+});
+const id = Joi.string().guid({
+  version: ['uuidv4', 'uuidv5'],
+});
+const categoryId = Joi.string().guid({
+  version: ['uuidv4', 'uuidv5'],
+});
+const characterId = Joi.string().guid({
+  version: ['uuidv4', 'uuidv5'],
+});
+const movieId = Joi.string().guid({
+  version: ['uuidv4', 'uuidv5'],
 });
 
 // Schemas
@@ -38,4 +44,14 @@ const updateMovieSchema = Joi.object({
   categoryId: categoryId,
 });
 
-module.exports = { createMovieSchema, getMovieSchema, updateMovieSchema };
+const addCharacterSchema = Joi.object({
+  characterId: characterId.required(),
+  movieId: movieId.required(),
+});
+
+module.exports = {
+  createMovieSchema,
+  getMovieSchema,
+  updateMovieSchema,
+  addCharacterSchema,
+};

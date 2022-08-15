@@ -37,7 +37,14 @@ const CharacterSchema = {
 
 // Extending Model
 class Character extends Model {
-  static associate() {}
+  static associate(models) {
+    this.belongsToMany(models.Movie, {
+      through: models.CharacterMovie,
+      as: 'movies',
+      foreignKey: 'characterId',
+      otherKey: 'movieId',
+    });
+  }
 
   static config(sequelize) {
     return {
