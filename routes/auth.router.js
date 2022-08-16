@@ -57,7 +57,7 @@ router.post(
  * /api/v1/auth/register:
  *  post:
  *    summary: Register
- *    description: get token
+ *    description: get welcome email
  *    tags: [Auth]
  *    requestBody:
  *      required: true
@@ -75,7 +75,7 @@ router.post(
  *              example: {message: string}
  *
  *      '400':
- *        description: There is with the data
+ *        description: There is bad with the data
  */
 router.post(
   '/register',

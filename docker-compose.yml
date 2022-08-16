@@ -17,7 +17,7 @@ services:
       - DATABASE_URL
     depends_on:
       - postgres
-    command: sh -c './wait-for postgres:5432 -- npm run start:dev'
+    command: sh -c './wait-for postgres:5432 -- npm run migrations:run && npm run start:dev'
 
   postgres:
     image: postgres:14
