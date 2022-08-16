@@ -31,15 +31,21 @@ class CategoriesService {
   }
 
   async updateCategory(id, changes) {
-    const category = await this.findCategoryById(id);
-    const updatedCategory = await category.update(changes);
-    return updatedCategory;
+    const category = await models.Category.findByPk(id);
+    if (!category) {
+      throw boom.notFound('Category not found');
+    }
+    await category.update(changes);
+    return { state: 'updated' };
   }
 
   async deleteCategory(id) {
-    const category = await this.findCategoryById(id);
+    const category = await models.Category.findByPk(id);
+    if (!category) {
+      throw boom.notFound('Category not found');
+    }
     await category.destroy();
-    return category;
+    return { state: 'deleted' };
   }
 }
 

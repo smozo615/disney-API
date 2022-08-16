@@ -16,7 +16,7 @@ class UsersService {
 
   async getAllUser() {
     const users = await models.User.findAll({
-      attributes: ['email']
+      attributes: ['email', 'role'],
     });
     return users;
   }

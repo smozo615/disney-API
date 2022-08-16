@@ -21,6 +21,7 @@
  *        - story
  */
 const express = require('express');
+const passport = require('passport');
 
 // middleware: validator and schemas
 const { dataValidator } = require('../middlewares/validator.middleware');
@@ -30,6 +31,9 @@ const {
   updateCharacterSchema,
   queryCharacterSchema,
 } = require('../schemas/character.schema');
+
+// Middleware: check role
+const { checkRole } = require('../middlewares/auth.middleware');
 
 // Router
 const router = express.Router();
@@ -61,9 +65,15 @@ const service = new CharactersService();
  *              $ref: '#/components/schemas/Character'
  *      '400':
  *        description: There is something wrong with the req body
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(createCharacterSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -93,9 +103,15 @@ router.post(
  *              type: array
  *              items:
  *                $ref: '#/components/schemas/Character'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.get(
   '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin', 'customer'),
   dataValidator(queryCharacterSchema, 'query'),
   async (req, res, next) => {
     try {
@@ -124,6 +140,10 @@ router.get(
  *              $ref: '#/components/schemas/Character'
  *      '400':
  *        description: Something in the req is wrong
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  *    parameters:
  *      - name: id
  *        in: path
@@ -135,6 +155,8 @@ router.get(
  */
 router.get(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin', 'customer'),
   dataValidator(getCharacterSchema, 'params'),
   async (req, res, next) => {
     try {
@@ -173,13 +195,19 @@ router.get(
  *        description: successfully updated character
  *        content:
  *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Character'
+ *            type: object
+ *              example: {state: updated}
  *      '400':
  *        description: bad request
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(getCharacterSchema, 'params'),
   dataValidator(updateCharacterSchema, 'body'),
   async (req, res, next) => {
@@ -215,12 +243,19 @@ router.patch(
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Character'
+ *              type: object
+ *              example: {state: deleted}
  *      '400':
  *        description: bad request
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(getCharacterSchema, 'params'),
   async (req, res, next) => {
     try {

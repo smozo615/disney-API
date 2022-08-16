@@ -10,8 +10,11 @@ const {
 const app = express();
 const port = process.env.PORT;
 
-// to enable json
+// To enable json
 app.use(express.json());
+
+// Passport
+require('./auth');
 
 // Swagger - doc
 const swaggerUI = require('swagger-ui-express');
@@ -34,6 +37,20 @@ const swaggerConfig = {
         description: 'Development Server',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+      responses: {
+        UnauthorizedError: {
+          description: 'Access token is missing or invalid',
+        },
+      },
+    },
   },
   apis: ['./routes/*.js'],
 };

@@ -9,7 +9,7 @@ class AuthService {
   async login(data) {
     const loggedUser = await this.validateLoginData(data);
     const token = await this.signtoken(loggedUser);
-    return token;
+    return { token: token };
   }
 
   async validateLoginData(data) {
@@ -37,6 +37,7 @@ class AuthService {
   async signtoken(userData) {
     const payload = {
       sub: userData.id,
+      role: userData.role,
     };
     const token = jwt.sign(payload, process.env.JWTSECRET);
     return token;

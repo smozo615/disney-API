@@ -14,14 +14,18 @@
  *        - name
  */
 const express = require('express');
+const passport = require('passport');
 
-// middleware: validator and schemas
+// Middleware: validator and schemas
 const { dataValidator } = require('../middlewares/validator.middleware');
 const {
   createCategorySchema,
   getCategorySchema,
   updateCategorySchema,
 } = require('../schemas/category.schema');
+
+// Middleware: check role
+const { checkRole } = require('../middlewares/auth.middleware');
 
 // Router
 const router = express.Router();
@@ -53,9 +57,15 @@ const service = new CategoriesService();
  *              $ref: '#/components/schemas/Category'
  *      '400':
  *        description: There is something wrong with the req body
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(createCategorySchema, 'body'),
   async (req, res, next) => {
     try {
@@ -85,15 +95,24 @@ router.post(
  *              type: array
  *              items:
  *                $ref: '#/components/schemas/Category'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
-router.get('/', async (req, res, next) => {
-  try {
-    const categories = await service.getAllCategories();
-    res.send(categories);
-  } catch (err) {
-    next(err);
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin', 'customer'),
+  async (req, res, next) => {
+    try {
+      const categories = await service.getAllCategories();
+      res.send(categories);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 // Get category by ID
 /**
@@ -112,6 +131,10 @@ router.get('/', async (req, res, next) => {
  *              $ref: '#/components/schemas/Category'
  *      '400':
  *        description: Something in the req is wrong
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  *    parameters:
  *      - name: id
  *        in: path
@@ -123,6 +146,8 @@ router.get('/', async (req, res, next) => {
  */
 router.get(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin', 'customer'),
   dataValidator(getCategorySchema, 'params'),
   async (req, res, next) => {
     try {
@@ -161,13 +186,19 @@ router.get(
  *        description: successfully updated category
  *        content:
  *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Category'
+ *            type: object
+ *              example: {state: updated}
  *      '400':
  *        description: bad request
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(getCategorySchema, 'params'),
   dataValidator(updateCategorySchema, 'body'),
   async (req, res, next) => {
@@ -203,12 +234,19 @@ router.patch(
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Category'
+ *              type: object
+ *              example: {state: deleted}
  *      '400':
  *        description: bad request
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(getCategorySchema, 'params'),
   async (req, res, next) => {
     try {

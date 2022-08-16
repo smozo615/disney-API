@@ -55,16 +55,22 @@ class MoviesService {
   }
 
   async updateMovie(id, changes) {
-    const movie = await this.findMovieById(id);
+    const movie = await models.Movie.findByPk(id);
+    if (!movie) {
+      throw boom.notFound('movie not found');
+    }
     if (changes.stars) {
       changes.stars = parseFloat(changes.stars.toFixed(1));
     }
-    const updatedmovie = movie.update(changes);
-    return updatedmovie;
+    await movie.update(changes);
+    return { state: 'updated' };
   }
 
   async deleteMovie(id) {
-    const movie = await this.findMovieById(id);
+    const movie = await models.Movie.findByPk(id);
+    if (!movie) {
+      throw boom.notFound('movie not found');
+    }
     await movie.destroy();
     return { state: 'deleted' };
   }

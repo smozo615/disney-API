@@ -24,6 +24,7 @@
  *        - releaseDate
  */
 const express = require('express');
+const passport = require('passport');
 
 // middleware: validator and schemas
 const { dataValidator } = require('../middlewares/validator.middleware');
@@ -34,6 +35,9 @@ const {
   addCharacterSchema,
   queryMovieSchema,
 } = require('../schemas/movie.schema');
+
+// Middleware: check role
+const { checkRole } = require('../middlewares/auth.middleware');
 
 // Router
 const router = express.Router();
@@ -65,9 +69,15 @@ const service = new MoviesService();
  *              $ref: '#/components/schemas/Movie'
  *      '400':
  *        description: There is something wrong with the req body
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(createMovieSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -97,9 +107,15 @@ router.post(
  *              type: array
  *              items:
  *                $ref: '#/components/schemas/Movie'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.get(
   '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin', 'customer'),
   dataValidator(queryMovieSchema, 'query'),
   async (req, res, next) => {
     try {
@@ -128,6 +144,10 @@ router.get(
  *              $ref: '#/components/schemas/Movie'
  *      '400':
  *        description: Something in the req is wrong
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  *    parameters:
  *      - name: id
  *        in: path
@@ -139,6 +159,8 @@ router.get(
  */
 router.get(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin', 'customer'),
   dataValidator(getMovieSchema, 'params'),
   async (req, res, next) => {
     try {
@@ -177,13 +199,19 @@ router.get(
  *        description: successfully updated movie
  *        content:
  *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Movie'
+ *            type: object
+ *              example: {state: updated}
  *      '400':
  *        description: bad request
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(getMovieSchema, 'params'),
   dataValidator(updateMovieSchema, 'body'),
   async (req, res, next) => {
@@ -219,12 +247,19 @@ router.patch(
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Movie'
+ *              type: object
+ *              example: {state: deleted}
  *      '400':
  *        description: bad request
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(getMovieSchema, 'params'),
   async (req, res, next) => {
     try {
@@ -267,9 +302,15 @@ router.delete(
  *
  *      '400':
  *        description: bad request
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.post(
   '/add-character',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(addCharacterSchema, 'body'),
   async (req, res, next) => {
     try {

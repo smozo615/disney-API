@@ -15,6 +15,7 @@
  *        - password
  */
 const express = require('express');
+const passport = require('passport');
 
 // middleware: validator and schemas
 const { dataValidator } = require('../middlewares/validator.middleware');
@@ -23,6 +24,9 @@ const {
   updateUserSchema,
   getUserSchema,
 } = require('./../schemas/user.schema');
+
+// Middleware: check role
+const { checkRole } = require('../middlewares/auth.middleware');
 
 // Router
 const router = express.Router();
@@ -54,15 +58,20 @@ const service = new UsersService();
  *              $ref: '#/components/schemas/User'
  *      '400':
  *        description: There is something wrong with the req body
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(createUserSchema, 'body'),
   async (req, res, next) => {
     try {
       const { body } = req;
       const newUser = await service.createUser(body);
-      console.log(newUser);
       res.status(201).json(newUser);
     } catch (err) {
       next(err);
@@ -87,15 +96,24 @@ router.post(
  *              type: array
  *              items:
  *                $ref: '#/components/schemas/User'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  */
-router.get('/', async (req, res, next) => {
-  try {
-    const users = await service.getAllUser();
-    res.send(users);
-  } catch (err) {
-    next(err);
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
+  async (req, res, next) => {
+    try {
+      const users = await service.getAllUser();
+      res.send(users);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 // Get user by ID
 /**
@@ -116,6 +134,10 @@ router.get('/', async (req, res, next) => {
  *                {id: string}
  *      '400':
  *        description: There is something wrong with the req
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  *    parameters:
  *      - name: id
  *        in: path
@@ -126,6 +148,8 @@ router.get('/', async (req, res, next) => {
  */
 router.get(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(getUserSchema, 'params'),
   async (req, res, next) => {
     try {
@@ -167,6 +191,10 @@ router.get(
  *          application/json:
  *            schema:
  *              type: object
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  *    parameters:
  *      - name: id
  *        in: path
@@ -177,6 +205,8 @@ router.get(
  */
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(getUserSchema, 'params'),
   dataValidator(updateUserSchema, 'body'),
   async (req, res, next) => {
@@ -214,6 +244,10 @@ router.patch(
  *          application/json:
  *            schema:
  *              type: object
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *    security:
+ *      - bearerAuth: []
  *    parameters:
  *      - name: id
  *        in: path
@@ -224,6 +258,8 @@ router.patch(
  */
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole('admin'),
   dataValidator(getUserSchema, 'params'),
   async (req, res, next) => {
     try {

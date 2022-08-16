@@ -53,13 +53,19 @@ class CharactersService {
   }
 
   async updateCharacter(id, changes) {
-    const character = await this.findCharacterById(id);
-    const updatedCharacter = character.update(changes);
-    return updatedCharacter;
+    const character = await models.Character.findByPk(id);
+    if (!character) {
+      throw boom.notFound('Character not found');
+    }
+    await character.update(changes);
+    return { state: 'updated' };
   }
 
   async deleteCharacter(id) {
-    const character = await this.findCharacterById(id);
+    const character = await models.Character.findByPk(id);
+    if (!character) {
+      throw boom.notFound('Character not found');
+    }
     await character.destroy();
     return { state: 'deleted' };
   }
